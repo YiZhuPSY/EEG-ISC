@@ -13,7 +13,7 @@ duration = [100;81;149;129;133;67;123;57;121;133;132;170;215;170;129];
 allvideo = 1:15;
 
 
-%% ISC for single video 
+%% ISC for single video
 
 disp('3. It is time to run ISC!')
 
