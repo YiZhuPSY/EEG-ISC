@@ -46,3 +46,17 @@ end
 
 cd(save_dir)
 save('ISC_allvideo.mat','isc','isc_persubject','isc_percomp','isc_persubject_percomp','w','a')
+
+%% topoplot
+Ncomp = 3;
+
+if ~exist('topoplot') | ~exist('notBoxPlot')
+    warning('Get display functions topoplot, notBoxPlot where you found this file or on the web');
+else
+    for i=1:Ncomp
+        subplot(1,Ncomp,i);
+        topoplot(squeeze(a(12,:,i)),'Neuroscan64.loc'); % video 12
+        set(gca,'clim',[-0.6 0.6])
+        %colorbar
+    end
+end
