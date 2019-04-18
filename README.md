@@ -5,7 +5,7 @@ specified for analyses presented in Zhu, Y., Pan, Y., & Hu, Y. (2019). Learning 
 You will need EEGLAB to run Step1_preprocess_demo;
 
 You will need these files to run Step2_ISC_demo:
-1. runisc.m -- EEG specific code
+1. runisc.m -- EEG-ISC specific code
 2. topoplot.m -- stand-alone version of EEGlab's popular display function (does not require EEGlab). 
 3. Neuroscan64.loc -- Neuroscan location file for topoplot
 4. notBoxPlot.m -- stand-alone version of Rob Campbell's scatter plot (does not require suplementary functions)
