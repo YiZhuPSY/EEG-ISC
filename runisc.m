@@ -56,16 +56,16 @@ function [ISC,ISC_persubject,ISC_persecond,W,A] = runisc(datafile)
 % natural stimuli than adults", in review
 %
 % Jason Ki, Simon Kelly, Lucas C. Parra, "Attention strongly modulates
-% reliability of neural responses to naturalistic narrative stimuli.â€?% Journal of Neuroscience, 36 (10), 3092-3101.
+% reliability of neural responses to naturalistic narrative stimuli.éˆ¥?% Journal of Neuroscience, 36 (10), 3092-3101.
 %
 % Jacek P. Dmochowski, Matthew A. Bezdek, Brian P. Abelson, John S.
-% Johnson, Eric H. Schumacher, Lucas C. Parra, â€œAudience preferences are
-% predicted by temporal reliability of neural processingâ€? Nature
+% Johnson, Eric H. Schumacher, Lucas C. Parra, éˆ¥æ·udience preferences are
+% predicted by temporal reliability of neural processingéˆ¥? Nature
 % Communication, 5567, July 2014.
 %
-% Jacek P. Dmochowski, Paul Sajda, Joao Dias, Lucas C. Parra, â€œComponents
+% Jacek P. Dmochowski, Paul Sajda, Joao Dias, Lucas C. Parra, éˆ¥æ·omponents
 % of ongoing EEG with high correlation point to emotionally-laden attention
-% -- a possible marker of engagement?â€? Frontiers in Human Neuroscience,
+% -- a possible marker of engagement?éˆ¥? Frontiers in Human Neuroscience,
 % 6:112, April 2012.
 
 % (c) Lucas C Parra, parra@ccny.cuny.edu
@@ -80,7 +80,7 @@ function [ISC,ISC_persubject,ISC_persecond,W,A] = runisc(datafile)
 % 08/05/16. version 0.05: fixed bug in pooling over subjects, added some displays
 
 % some ISC processing parameters
-gamma = 0; % shrinkage parameter; smaller gamma for less regularization  %%%% ¿É¸ü¸Ä
+gamma = 0; % shrinkage parameter; smaller gamma for less regularization  %%%% å¯æ›´æ”¹
 Nsec  = 5;  % time-window (in seconds) over which to compute time-reposeved ISC
 Ncomp = 3;  % number of components to dispaly (all D are computed)
     
@@ -169,7 +169,7 @@ end
 % ### Run all the code above with phase-randomized Xr to get chance values
 % of ISC measures under the null hypothesis of no ISC.
 %Xr = phaserandomized(X);
-%%%%Áã¼ÙÉèµÄISCÖµ¼ÆËã
+
 
 
 
