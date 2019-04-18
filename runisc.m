@@ -37,29 +37,13 @@ Rw_reg = (1-gamma)*Rw + gamma*mean(eig(Rw))*eye(size(Rw));
 [W,ISC]=eig(Rb,Rw_reg); [ISC,indx]=sort(diag(ISC),'descend'); W=W(:,indx);
 
 % compute forward model ("scalp projections") A
-%A=Rw_reg*W*inv(W'*Rw_reg*W);
-A=Rw*W*inv(W'*Rw*W);
-
+A=Rw_reg*W*inv(W'*Rw_reg*W);
 
 % Compute ISC resolved by subject, see Cohen et al.
 for i=1:N
     Rw=0; for j=1:N, if i~=j, Rw = Rw+1/(N-1)*(Rij(:,:,i,i)+Rij(:,:,j,j)); end; end
     Rb=0; for j=1:N, if i~=j, Rb = Rb+1/(N-1)*(Rij(:,:,i,j)+Rij(:,:,j,i)); end; end
     ISC_persubject(:,i) = diag(W'*Rb*W)./diag(W'*Rw*W);
-end
-
-% show some results
-%if ~exist('topoplot') | ~exist('notBoxPlot')
-%    warning('Get display functions topoplot, notBoxPlot where you found this file or on the web');
-%else
-%    for i=1:Ncomp
-%       subplot(Ncomp,1,i);
-%        topoplot(A(:,i),'Neuroscan64.loc','electrodes','on'); title(['a_' num2str(i)])
-    
-%    end
-    %colorbar
-%    subplot(2,2,3); notBoxPlot(ISC_persubject(1:Ncomp,:)'); xlabel('Component'); ylabel('ISC'); title('Per subjects');
-%   subplot(2,2,4); plot(ISC_persecond(1:Ncomp,:)'); xlabel('Time (s)'); ylabel('ISC'); title('Per second');
 end
 
 % ### Run all the code above with phase-randomized Xr to get chance values
