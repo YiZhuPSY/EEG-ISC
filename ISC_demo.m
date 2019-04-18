@@ -12,9 +12,7 @@ fs = 250;
 duration = [100;81;149;129;133;67;123;57;121;133;132;170;215;170;129];
 allvideo = 1:15;
 
-
-%% ISC for single video
-
+%% ISC analysis for each video
 load_dir = 'G:/Research/data/dataforISC/full duration';
 save_dir = 'G:/Research/data/ResultsforISC/full duration';
 
@@ -36,7 +34,7 @@ for videoi = 1:15
      cd(load_dir)
      datafile = ['v',num2str(videoi),'.mat'];
      
-     [ISC,ISC_persubject,~,W,A] = runisc(datafile); %setpath runisc.m
+     [ISC,ISC_persubject,W,A] = runisc(datafile); %setpath runisc.m
      
      isc(videoi,1) = sum(ISC(1:3,1));
      isc_persubject(videoi,:) = sum(ISC_persubject(1:3,:));
