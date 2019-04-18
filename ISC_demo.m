@@ -5,10 +5,7 @@ allsub_No = [1:15];
 badsub_No = [];
 sub_No = setdiff(allsub_No,badsub_No); 
 n = length(sub_No); 
-
 fs = 250; 
-
-
 duration = [100;81;149;129;133;67;123;57;121;133;132;170;215;170;129];
 allvideo = 1:15;
 
