@@ -1,0 +1,127 @@
+%% loading parameters
+clear;clc
+
+allsub_No = [1:15]; 
+badsub_No = []; 
+sub_No = setdiff(allsub_No,badsub_No); 
+n = length(sub_No); 
+
+video =1:15; 
+duration = [100;81;149;129;133;67;123;57;121;133;132;170;215;170;129]; 
+
+mark = [3:17]';  % mark=video+2
+eogchannels = [63,64]; 
+m_eogchannels = [33,43,63,64]; 
+fs = 250; % sampling rate
+
+
+%% load curry7 data recorded from NeuroScan and filter (high pass 1hz)、notch (50hz)、downsample (250hz) 
+
+load_dir = 'G:/Research/raw data/sub' 
+Fil_Notch_Downsam_dir = 'G:/Research/preprocess data/step1';
+Epoch4ISC_dir = 'G:/Research/preprocess data/step2';
+regressEOG_dir = 'G:/Research/preprocess data/step3';
+rejbadcha_dir = 'G:/Research/preprocess data/step4';
+rejoutliers = 'G:/Research/preprocess data/step5';
+
+for subi = sub_No(1:n);     
+    subi    
+if subi <10 
+    % load curry7 data
+    EEG = loadcurry([load_dir,num2str(subi),'\Acquisition 0', num2str(subi),'.dap'], 'CurryLocations', 'False'); 
+else
+    EEG = loadcurry([load_dir,num2str(subi),'\Acquisition ', num2str(subi),'.dap'], 'CurryLocations', 'False');
+end
+
+
+%% filtering (high pass 1hz)、notching (50hz)、downsampling (250hz) 
+    %%% filtering
+    EEG = pop_eegfiltnew(EEG, [],1,3300,1,[],0);
+    %%% notching
+    EEG = pop_eegfiltnew(EEG, 49,51,3300,1,[],0);
+    %%% downsampling to 250hz
+    EEG = pop_resample( EEG, 250); 
+    EEG = pop_saveset( EEG, 'filename',['s',num2str(subi),'.set'],'filepath',Fil_Notch_Downsam_dir);
+end
+
+
+%% Epoch for ISC
+for subi = sub_No(1:n)
+    subi
+    for videoi = 1:15 
+        videoi
+        EEG = pop_loadset('filename',['s',num2str(subi),'.set'],'filepath',Fil_Notch_Downsam_dir); 
+        
+        %%% epoching
+        EEG = pop_epoch( EEG, { num2str(mark(videoi,1)) }, [0 duration(videoi,1)], 'newname',...
+            ['s',num2str(subi),'v',num2str(videoi),'.set'], 'epochinfo', 'yes');
+        EEG = pop_saveset( EEG, 'filename',['s',num2str(subi),'v',num2str(videoi),'.set'],...
+            'filepath',Epoch4ISC_dir);     
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    clear EEG
+    end
+end
+
+
+%% Regressing out eye-movenments
+for subi = sub_No(1:n)
+    subi
+    for videoi = 1:15 
+        videoi
+        EEG = pop_loadset('filename',['s',num2str(subi),'v',num2str(videoi),'.set'],...
+            'filepath',Epoch4ISC_dir);
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        data = double(EEG.data)';    
+        data = data - data(:, eogchannels) * (data(:, eogchannels) \ data); 
+        EEG.data = single(data)';
+ 
+        EEG = pop_saveset( EEG, 'filename',['s',num2str(subi),'v',num2str(videoi),'.set'],'filepath',regressEOG_dir); 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+
+%%% Clearing badchannels 
+% EEGLAB -- Automatic Channel Rejection -- 'spec'，5
+        [~,indelec] = pop_rejchan(EEG, 'elec',[1:32 34:42 44:62] ,'threshold',5,'norm','on','measure','spec');
+ 
+        badchannels{subi,videoi} = indelec';  
+      
+        misplaced_channels = badchannels{subi,videoi};
+        index1 = find(misplaced_channels>32 & misplaced_channels<42); 
+        index2 = find(misplaced_channels>41);
+        misplaced_channels(index1) = misplaced_channels(index1)+1;
+        misplaced_channels(index2) = misplaced_channels(index2)+2;
+        badchannels{subi,videoi} = misplaced_channels;
+        
+        EEG.data(badchannels{subi,videoi},:)=0;
+        EEG = pop_saveset( EEG, 'filename',['s',num2str(subi),'v',num2str(videoi),'.set'],'filepath',rejbadcha_dir);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Rejecting outliers (over 4 std)
+      
+        [D,T] = size(EEG.data); %D:channels；T：timepoint
+        data = double(permute(EEG.data,[2,1])); 
+        
+        stdThresh = 4;
+        % data(abs(data)>stdThresh*repmat(std(data),[T 1])) = NaN;  
+        data(abs(data-repmat(mean(data,1),[T 1]))>stdThresh*repmat(std(data),[T 1])) = NaN; 
+        
+        % remove 40ms before and after
+        % h=[1; zeros(round(0.04*fs)-1,1)];
+        % remove 50ms before and after
+        h=[1; zeros(round(0.05*fs)-1,1)]; 
+        data = filter(h,1,flipud(filter(h,1,flipud(data))));  
+ 
+        data(isnan(data))=0;  % Mark outliers as 0, to avoid NaN 
+       
+        EEG.data = single(permute(data,[2,1]));
+        EEG = pop_saveset( EEG, 'filename',['s',num2str(subi),'v',num2str(videoi),'.set'],'filepath',rejoutliers);
+                
+        clear EEG;
+    end
+  
+end
+cd(rejbadcha_dir)
+save('badchannelindex.mat','badchannels')
