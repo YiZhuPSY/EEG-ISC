@@ -15,10 +15,8 @@ allvideo = 1:15;
 
 %% ISC for single video
 
-disp('3. It is time to run ISC!')
-
-load_dir = 'G:/Research/data/6. dataforISC_5sp_5SD_40ms/full duration';
-save_dir = 'G:/Research/data/8. ResultsforISC_5sp_5SD_40ms/full duration';
+load_dir = 'G:/Research/data/dataforISC/full duration';
+save_dir = 'G:/Research/data/ResultsforISC/full duration';
 
 % initialize following variables
 Nchan = 60; % number of channels
@@ -53,4 +51,3 @@ end
 
 cd(save_dir)
 save('ISC_allvideo.mat','isc','isc_persubject','isc_percomp','isc_persubject_percomp','w','a')
-
