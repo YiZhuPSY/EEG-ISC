@@ -24,7 +24,7 @@ end;
 % now start the ISC code proper
 
 % compute cross-covariance between all subjects i and j
-Rij = permute(reshape(cov(X(:,:)),[D N  D N]),[1 3 2 4]); % check this line!!!
+Rij = permute(reshape(cov(X(:,:)),[D N  D N]),[1 3 2 4]); 
 
 % compute within- and between-subject covariances
 Rw =       1/N* sum(Rij(:,:,1:N+1:N*N),3);  % pooled over all subjects
