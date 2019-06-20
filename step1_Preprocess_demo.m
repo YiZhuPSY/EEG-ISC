@@ -4,7 +4,7 @@
 % epoch extraction, eye-movement artifact rejection,badchannel rejection,
 % and outlier rejection.
 
-% This code might not support older versions of EGGLAB (version 14.1.0) and MATLAB (R2016b). 
+% This code might not support older versions of EEGLAB (version 14.1.0) and MATLAB (R2016b). 
 
 % To run this code appropriately, you need to set EEGLAB to the path, which can be
 % downloaded from https://sccn.ucsd.edu/eeglab/download.php.  
@@ -37,7 +37,7 @@ fs = 250; % sampling rate
 % The size of the raw data (i.e. "Acquisition 01.dap") was too large to upload, 
 % which is available from the authors on reasonable request
 
-%% filtering (high pass 1hz)¡¢notching (50hz)¡¢downsampling (250hz) 
+%% filtering (high pass 1hz)Â¡Â¢notching (50hz)Â¡Â¢downsampling (250hz) 
 % filtering
 % EEG = pop_eegfiltnew(EEG, [],1,3300,1,[],0);
 
@@ -69,7 +69,7 @@ EEG = pop_saveset( EEG, 'filename','regressEOG.set');
 
         
 %% Clearing badchannels 
-% EEGLAB -- Automatic Channel Rejection -- 'spec'£¬5
+% EEGLAB -- Automatic Channel Rejection -- 'spec'Â£Â¬5
 [~,indelec] = pop_rejchan(EEG, 'elec',[1:32 34:42 44:62] ,'threshold',5,'norm','on','measure','spec');
  
 badchannels = indelec';  
@@ -85,7 +85,7 @@ EEG = pop_saveset( EEG, 'filename','rejbadcha.set');
 
 %% Rejecting outliers (over 4 std)
 
-[D,T] = size(EEG.data); %D:channels£»T£ºtimepoint
+[D,T] = size(EEG.data); %D:channelsÂ£Â»TÂ£Âºtimepoint
 data = double(permute(EEG.data,[2,1])); 
         
 stdThresh = 4;
